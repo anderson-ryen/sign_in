@@ -9,7 +9,8 @@ config = {
     "account": "###",
     "password": "###",
 }
-
+# Server酱推送（可空）
+     self.sckey = ''
 
 async def get_all_cate(session) -> list:
     category_api = "http://floor.huluxia.com/category/list/ANDROID/2.0"
@@ -98,12 +99,21 @@ async def main():
         completed, pending = await asyncio.wait(sign_tasks)
         results = [t.result() for t in completed]
         print('results: {!r}'.format(results))
-
+        
+ def server_send(self, msg):
+        if self.sckey == '':
+            return
+        server_url = "https://sc.ftqq.com/" + str(self.sckey) + ".send"
+        data = {
+                'text': "签到完成，点击查看详细信息~",
+                'desp': msg
+            }
+        requests.post(server_url, data=data)
 
 def main_handler(event=None, context=None):
     loop = asyncio.get_event_loop()
     loop.run_until_complete(main())
-
+    self.server_send(msg)
 
 if __name__ == '__main__':
     main_handler()
